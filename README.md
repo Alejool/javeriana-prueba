@@ -10,9 +10,29 @@ Single Page Application (SPA) para la **Pontificia Universidad Javeriana**, dise
 
 ## ▶️ Ejecución Local
 
-1. **Instalar dependencias**: `npm install`
-2. **Desarrollo**: `npm run dev` (disponible en `localhost:5173`)
-3. **Producción**: `npm run build`
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/Alejool/javeriana-prueba.git
+   ```
+2. **Navegar al directorio del proyecto**:
+   ```bash
+   cd javeriana-prueba
+   ```
+3. **Instalar dependencias**: 
+   ```bash
+   npm install
+   ```
+4. **Ejecutar en modo Desarrollo**: 
+   ```bash
+   npm run dev
+   ```
+   *La aplicación estará disponible para probar en `http://localhost:5173`*
+
+5. **Construir para Producción** (Opcional): 
+   ```bash
+   npm run build
+   npm run preview
+   ```
 
 ---
 
@@ -23,6 +43,15 @@ Single Page Application (SPA) para la **Pontificia Universidad Javeriana**, dise
 - **Manejo de Datos y API**: Como la API (JSONPlaceholder) solo entrega datos básicos de posts, se implementó una **capa de transformación** en los servicios para añadir fechas, tipos de programa y campus de forma aleatoria/estática, enriqueciendo la experiencia.
 - **Filtros y Paginación**: Se añadió lógica de filtrado por categoría y búsqueda, además de un sistema de **paginación** para manejar el volumen de datos de forma eficiente.
 - **Persistencia de Leads**: Los registros de interesados se gestionan con **Zustand** y se sincronizan automáticamente con `localStorage`, asegurando que los datos no se pierdan al recargar.
+- **Gestión de Leads y Validación**: 
+  - **Consolidación de Campos**: Se optó por usar un único campo de `Nombre Completo` en lugar de separar nombre y apellido. Esto simplifica la interfaz de usuario (UX) y reduce la carga cognitiva al completar el registro.
+  - **Validación de Dominio**: El sistema valida estrictamente que el email pertenezca al dominio institucional `@javeriana.edu.co`.
+  - **Inclusión de Campos Básicos**: Aunque no se especificaron campos adicionales en el enunciado, se incluyó el **Teléfono (como opcional)**. Se considera un campo básico necesario en cualquier flujo real de captación de leads para facilitar el contacto posterior por parte de la Dirección de Mercadeo.
+  - **Validaciones Detalladas**:
+    - **Nombre Completo**: Mínimo 3 caracteres, máximo 100. Solo letras y espacios. Normalización automática (Capitalize).
+    - **Email**: Estructura de email válida y dominio obligatorio `@javeriana.edu.co`.
+    - **Teléfono**: Opcional. Si se provee, debe tener entre 7 y 15 caracteres y seguir un formato numérico básico.
+  - **Normalización Automática**: Los datos se normalizan automáticamente (trimming y capitalización de nombres) utilizando transformaciones de Zod antes de ser persistidos.
 - **Arquitectura**: Enfoque modular pragmático. Se consideró Clean Architecture pero se descartó por **sobreingeniería** para el alcance actual.
 
 
