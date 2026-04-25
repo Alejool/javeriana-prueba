@@ -2,6 +2,7 @@ import { EventCard } from "@/features/events/components/EventCard";
 import { EventsListSkeleton } from "@/features/events/components/EventCardSkeleton";
 import type { Event } from "@/features/events/types";
 import { EmptyState } from "@/shared/components/EmptyState";
+import { Pagination } from "@/shared/components/Pagination";
 import { AlertCircle, Search } from "lucide-react";
 
 interface EventsListProps {
@@ -9,6 +10,9 @@ interface EventsListProps {
   loading: boolean;
   error: string | null;
   onRegister: (event: Event) => void;
+  currentPage: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
 }
 
 export const EventsList = ({
@@ -16,9 +20,12 @@ export const EventsList = ({
   loading,
   error,
   onRegister,
+  currentPage,
+  itemsPerPage,
+  onPageChange,
 }: EventsListProps) => {
   if (loading) {
-    return <EventsListSkeleton count={6} />;
+    return <EventsListSkeleton count={itemsPerPage} />;
   }
 
   if (error) {
@@ -39,18 +46,31 @@ export const EventsList = ({
         <EmptyState
           icon={Search}
           title="No se encontraron eventos"
-          description="Lo sentimos, no hay programas disponibles en este momento."
+          description="Intenta ajustar los filtros de búsqueda o explora otras categorías."
         />
       </div>
     );
   }
 
+  const totalPages = Math.ceil(events.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedEvents = events.slice(startIndex, endIndex);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} onRegister={onRegister} />
-      ))}
+    <div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+        itemsPerPage={itemsPerPage}
+        totalItems={events.length}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {paginatedEvents.map((event) => (
+          <EventCard key={event.id} event={event} onRegister={onRegister} />
+        ))}
+      </div>
     </div>
   );
 };
-
