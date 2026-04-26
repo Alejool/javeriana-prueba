@@ -7,6 +7,8 @@ import { leadFormSchema, type LeadFormData } from '@/shared/schemas/leadSchema';
 import { Input } from '@/shared/components/Input';
 import { Button } from '@/shared/components/Button';
 
+import { handleBackdropClick } from '@/shared/utils/events';
+
 interface LeadFormProps {
   event: Event;
   onSubmit: (data: LeadFormData) => void;
@@ -34,18 +36,13 @@ export const LeadForm = ({ event, onSubmit, onClose }: LeadFormProps) => {
     onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
     <motion.div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={handleBackdropClick}
+      onClick={(e) => handleBackdropClick(e, onClose)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
