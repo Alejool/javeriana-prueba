@@ -3,13 +3,21 @@ import { useEffect, useMemo, useState } from "react";
 import { EventFilters } from "@/features/events/components/EventFilters";
 import { EventsList } from "@/features/events/components/EventsList";
 import type { Event, EventCategory } from "@/features/events/types";
+import { LeadForm } from "@/features/leads/components/LeadForm";
+import { LeadsHistory } from "@/features/leads/components/LeadsHistory";
+import type { LeadFormData } from "@/features/leads/types";
+import { Button } from "@/shared/components/Button";
 import { Footer } from "@/shared/components/Footer";
 import { Header } from "@/shared/components/Header";
 import { Toast } from "@/shared/components/Toast";
 import { useEventsStore } from "@/stores/useEventsStore";
+import { useLeadsStore } from "@/stores/useLeadsStore";
 import { AnimatePresence } from "framer-motion";
+import { Users } from "lucide-react";
 
 function App() {
+  // stores
+  const { addLead, leads } = useLeadsStore();
   const {
     events,
     loading,
@@ -22,6 +30,8 @@ function App() {
   } = useEventsStore();
 
   // Local state
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error" | "warning" | "info";
@@ -66,11 +76,23 @@ function App() {
   }, [searchTerm, selectedCategory, setCurrentPage]);
 
   const handleRegister = (event: Event) => {
-    console.log("Register intended for event:", event);
-    setToast({
-      message: `Funcionalidad de registro próximamente para: ${event.title}`,
-      type: "info",
-    });
+    setSelectedEvent(event);
+  };
+
+  const handleSubmitLead = (data: LeadFormData) => {
+    try {
+      const newLead = addLead(data);
+      setToast({
+        message: `¡Lead ${newLead.fullName} registrado exitosamente!`,
+        type: "success",
+      });
+    } catch (error) {
+      console.error(error);
+      setToast({
+        message: "Error al registrar el lead",
+        type: "error",
+      });
+    }
   };
 
   return (
@@ -86,6 +108,18 @@ function App() {
             <p className="text-neutral-600 dark:text-neutral-300 text-lg font-body">
               Explora nuestros programas y registra nuevos interesados
             </p>
+          </div>
+
+          <div className="flex shrink-0 gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsHistoryOpen(true)}
+              className="bg-white dark:bg-neutral-900"
+              icon={<Users className="w-4 h-4 text-primary" />}
+              iconPosition="left"
+            >
+              Ver Registros ({leads.length})
+            </Button>
           </div>
         </div>
 
@@ -108,6 +142,20 @@ function App() {
       </main>
 
       <Footer />
+
+      <AnimatePresence>
+        {selectedEvent && (
+          <LeadForm
+            event={selectedEvent}
+            onSubmit={handleSubmitLead}
+            onClose={() => setSelectedEvent(null)}
+          />
+        )}
+      </AnimatePresence>
+      <LeadsHistory
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+      />
 
       {/* Notificación */}
       <AnimatePresence>
