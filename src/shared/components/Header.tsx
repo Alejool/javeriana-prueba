@@ -2,7 +2,7 @@ import { DarkModeToggle } from "@/shared/components/DarkModeToggle";
 
 export const Header = () => {
   return (
-    <header className="bg-primary text-white border-b-4 border-secondary sticky top-0 z-50">
+    <header className="bg-primary text-white border-b-4 border-secondary ">
       <div className="container mx-auto px-4 py-4 sm:py-6">
         <div className="flex items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3 sm:gap-4">

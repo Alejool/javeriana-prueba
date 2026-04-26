@@ -114,8 +114,7 @@ function App() {
             <Button
               variant="outline"
               onClick={() => setIsHistoryOpen(true)}
-              className="bg-white dark:bg-neutral-900"
-              icon={<Users className="w-4 h-4 text-primary" />}
+              icon={<Users className="w-4 h-4 " />}
               iconPosition="left"
             >
               Ver Registros ({leads.length})
