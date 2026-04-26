@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from '@/shared/components/Button';
 
 interface ToastProps {
   message: string;
@@ -55,13 +56,15 @@ export const Toast = ({ message, type, onClose, duration = 3000 }: ToastProps) =
     >
       <Icon className="w-5 h-5 flex-shrink-0" />
       <span className="font-medium flex-1 font-body">{message}</span>
-      <button 
+      <Button 
         onClick={onClose} 
-        className="ml-2 hover:opacity-80 transition-opacity flex-shrink-0"
+        variant="ghost"
+        size="icon"
+        className="ml-2 hover:opacity-80 transition-opacity flex-shrink-0 text-inherit hover:bg-transparent dark:hover:bg-transparent hover:text-inherit dark:hover:text-inherit dark:text-inherit"
         aria-label="Cerrar notificación"
       >
         <X className="w-4 h-4" />
-      </button>
+      </Button>
     </motion.div>
   );
 };
