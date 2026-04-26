@@ -1,8 +1,8 @@
-import { X, Users, Trash2, Calendar, Mail, Phone } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLeadsStore } from '@/stores/useLeadsStore';
-import { Button } from '@/shared/components/Button';
-import { formatDateLong } from '@/shared/utils/dateFormatter';
+import { Button } from "@/shared/components/Button";
+import { formatDateLong } from "@/shared/utils/dateFormatter";
+import { useLeadsStore } from "@/stores/useLeadsStore";
+import { AnimatePresence, motion } from "framer-motion";
+import { Calendar, Mail, Phone, Trash2, Users, X } from "lucide-react";
 
 interface LeadsHistoryProps {
   isOpen: boolean;
@@ -34,14 +34,15 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
           >
-            {/* Header */}
-            <div className="bg-primary text-white px-6 py-4 flex justify-between items-center shrink-0">
+            <div className="bg-primary text-white px-6 py-4 flex justify-between items-center ">
               <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-lg">
+                <div className="p-2 rounded-lg">
                   <Users className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-headline font-bold">Historial de Leads</h2>
+                  <h2 className="text-xl font-headline font-bold">
+                    Historial de Leads
+                  </h2>
                   <p className="text-primary-100 text-xs font-body">
                     {leads.length} registros persistidos en local
                   </p>
@@ -55,7 +56,6 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
               </button>
             </div>
 
-            {/* Content */}
             <div className="flex-1 overflow-y-auto p-6 bg-neutral-50 dark:bg-neutral-950/50">
               {leads.length === 0 ? (
                 <div className="h-64 flex flex-col items-center justify-center text-center">
@@ -86,11 +86,13 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
                             ID: {lead.id.slice(0, 4)}
                           </span>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm font-body">
                           <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
                             <Mail className="w-3.5 h-3.5 text-primary-500" />
-                            <span className="truncate max-w-[200px]">{lead.email}</span>
+                            <span className="truncate max-w-[200px]">
+                              {lead.email}
+                            </span>
                           </div>
                           {lead.phone && (
                             <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
@@ -101,7 +103,9 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
                           <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 sm:col-span-2">
                             <Calendar className="w-3.5 h-3.5 text-secondary-500" />
                             <span className="font-medium">Evento: </span>
-                            <span className="text-neutral-800 dark:text-neutral-200 truncate">{lead.eventTitle}</span>
+                            <span className="text-neutral-800 dark:text-neutral-200 truncate">
+                              {lead.eventTitle}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -124,7 +128,6 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
               )}
             </div>
 
-            {/* Footer */}
             <div className="p-4 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center shrink-0">
               <Button
                 variant="ghost"
