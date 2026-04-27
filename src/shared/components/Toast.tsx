@@ -10,40 +10,40 @@ interface ToastProps {
   duration?: number;
 }
 
+const toastConfig = {
+  success: {
+    icon: CheckCircle,
+    bgColor: 'bg-green-600 dark:bg-green-700',
+    textColor: 'text-white',
+    borderColor: 'border-l-4 border-green-700 dark:border-green-800',
+  },
+  error: {
+    icon: XCircle,
+    bgColor: 'bg-red-600 dark:bg-red-700',
+    textColor: 'text-white',
+    borderColor: 'border-l-4 border-red-700 dark:border-red-800',
+  },
+  warning: {
+    icon: AlertCircle,
+    bgColor: 'bg-secondary-500 dark:bg-secondary-600',
+    textColor: 'text-neutral-900 dark:text-neutral-900',
+    borderColor: 'border-l-4 border-secondary-700 dark:border-secondary-800',
+  },
+  info: {
+    icon: Info,
+    bgColor: 'bg-primary dark:bg-primary',
+    textColor: 'text-white',
+    borderColor: 'border-l-4 border-primary-700 dark:border-primary-800',
+  },
+} as const;
+
 export const Toast = ({ message, type, onClose, duration = 3000 }: ToastProps) => {
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     return () => clearTimeout(timer);
   }, [duration, onClose]);
 
-  const config = {
-    success: {
-      icon: CheckCircle,
-      bgColor: 'bg-green-600 dark:bg-green-700',
-      textColor: 'text-white',
-      borderColor: 'border-l-4 border-green-700 dark:border-green-800',
-    },
-    error: {
-      icon: XCircle,
-      bgColor: 'bg-red-600 dark:bg-red-700',
-      textColor: 'text-white',
-      borderColor: 'border-l-4 border-red-700 dark:border-red-800',
-    },
-    warning: {
-      icon: AlertCircle,
-      bgColor: 'bg-secondary-500 dark:bg-secondary-600',
-      textColor: 'text-neutral-900 dark:text-neutral-900',
-      borderColor: 'border-l-4 border-secondary-700 dark:border-secondary-800',
-    },
-    info: {
-      icon: Info,
-      bgColor: 'bg-primary dark:bg-primary',
-      textColor: 'text-white',
-      borderColor: 'border-l-4 border-primary-700 dark:border-primary-800',
-    },
-  };
-
-  const { icon: Icon, bgColor, textColor, borderColor } = config[type];
+  const { icon: Icon, bgColor, textColor, borderColor } = toastConfig[type];
 
   return (
     <motion.div 
