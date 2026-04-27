@@ -2,15 +2,15 @@ import type { Event, EventCategory } from "@/features/events/types";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { formatDateLong } from "@/shared/utils/dateFormatter";
+import { useLeadsStore } from "@/stores/useLeadsStore";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Tag, User } from "lucide-react";
+import { Calendar, CheckCircle, MapPin, Tag, User } from "lucide-react";
 
 interface EventCardProps {
   event: Event;
   onRegister: (event: Event) => void;
 }
 
-// Static config — defined at module scope to avoid object recreation on every render
 const categoryConfig: Record<
   EventCategory,
   { badge: string; borderColor: string }
@@ -33,6 +33,9 @@ const categoryConfig: Record<
 };
 
 export const EventCard = ({ event, onRegister }: EventCardProps) => {
+  const getLeadsByEvent = useLeadsStore((state) => state.getLeadsByEvent);
+
+  const isRegistered = getLeadsByEvent(event.id).length > 0;
   const config = categoryConfig[event.category];
 
   return (
@@ -42,7 +45,7 @@ export const EventCard = ({ event, onRegister }: EventCardProps) => {
       transition={{ duration: 0.3 }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
       className="h-full"
-      aria-label={`Evento: ${event.title}`}
+      aria-label={`Evento: ${event.title}${isRegistered ? ", ya registrado" : ""}`}
     >
       <Card
         hover
@@ -60,10 +63,19 @@ export const EventCard = ({ event, onRegister }: EventCardProps) => {
               transition={{ duration: 0.3 }}
             />
           )}
+          {isRegistered && (
+            <div
+              className="absolute top-2 right-2 flex items-center gap-1 bg-green-600 text-white text-xs font-semibold font-label px-2.5 py-1 rounded-full shadow-md"
+              aria-hidden="true"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Ya registrado
+            </div>
+          )}
         </div>
 
         <div className="p-6 flex flex-col flex-1">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-2 flex-wrap">
             <span
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold font-label ${config.badge}`}
             >
@@ -92,14 +104,25 @@ export const EventCard = ({ event, onRegister }: EventCardProps) => {
               </div>
             </div>
 
-            <Button
-              onClick={() => onRegister(event)}
-              variant="primary"
-              icon={<User className="w-4 h-4" />}
-              fullWidth
-            >
-              Registrar Interesado
-            </Button>
+            {isRegistered ? (
+              <Button
+                onClick={() => onRegister(event)}
+                variant="outline"
+                icon={<CheckCircle className="w-4 h-4" />}
+                fullWidth
+              >
+                Registrar otro interesado
+              </Button>
+            ) : (
+              <Button
+                onClick={() => onRegister(event)}
+                variant="primary"
+                icon={<User className="w-4 h-4" />}
+                fullWidth
+              >
+                Registrar Interesado
+              </Button>
+            )}
           </div>
         </div>
       </Card>
