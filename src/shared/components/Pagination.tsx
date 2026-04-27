@@ -48,8 +48,8 @@ export const Pagination = ({
   };
 
   return (
-    <nav 
-      aria-label="Paginación de eventos"
+    <nav
+      aria-label={`Paginación de eventos, página ${currentPage} de ${totalPages}`}
       className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700"
     >
       <p 
@@ -71,33 +71,33 @@ export const Pagination = ({
           <ChevronLeft className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
         </button>
 
-        <div className="flex gap-1" role="list">
+        <ol className="flex gap-1" aria-label="Lista de páginas">
           {getPageNumbers().map((page, index) => (
-            typeof page === 'number' ? (
-              <button
-                key={index}
-                onClick={() => onPageChange(page)}
-                aria-current={currentPage === page ? 'page' : undefined}
-                aria-label={`Ir a la página ${page}`}
-                className={`min-w-[40px] h-10 px-3 rounded-lg font-medium transition-colors ${
-                  currentPage === page
-                    ? 'bg-primary text-white dark:bg-primary-600'
-                    : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-                }`}
-              >
-                {page}
-              </button>
-            ) : (
-              <span
-                key={index}
-                className="min-w-[40px] h-10 px-3 flex items-center justify-center text-neutral-500 dark:text-neutral-500"
-                aria-hidden="true"
-              >
-                {page}
-              </span>
-            )
+            <li key={index}>
+              {typeof page === 'number' ? (
+                <button
+                  onClick={() => onPageChange(page)}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                  aria-label={`Ir a la página ${page}${currentPage === page ? ', página actual' : ''}`}
+                  className={`min-w-[40px] h-10 px-3 rounded-lg font-medium transition-colors ${
+                    currentPage === page
+                      ? 'bg-primary text-white dark:bg-primary-600'
+                      : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                  }`}
+                >
+                  {page}
+                </button>
+              ) : (
+                <span
+                  className="min-w-[40px] h-10 px-3 flex items-center justify-center text-neutral-500 dark:text-neutral-500"
+                  aria-hidden="true"
+                >
+                  {page}
+                </span>
+              )}
+            </li>
           ))}
-        </div>
+        </ol>
 
         <button
           onClick={() => onPageChange(currentPage + 1)}
