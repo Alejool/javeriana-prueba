@@ -1,6 +1,11 @@
 import axios from 'axios';
 import type { Event, EventCategory } from '@/features/events/types';
-import { API_ENDPOINTS } from '@/shared/constants';
+
+const API_EVENTS_URL = import.meta.env.VITE_API_EVENTS_URL as string;
+
+if (!API_EVENTS_URL) {
+  throw new Error('VITE_API_EVENTS_URL no está definida. Revisa tu archivo .env');
+}
 
 const categories: EventCategory[] = ['Pregrado', 'Posgrado', 'Educación Continua'];
 
@@ -33,7 +38,7 @@ export const fetchEvents = async (): Promise<Event[]> => {
 
   // Si no hay cache, obtener de la API
   try {
-    const response = await axios.get(API_ENDPOINTS.EVENTS);
+    const response = await axios.get(API_EVENTS_URL);
     
     if (!Array.isArray(response.data)) {
       throw new Error('Formato de respuesta de API inválido');

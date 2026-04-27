@@ -7,6 +7,3 @@ export const STORAGE_KEYS = {
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const JAVERIANA_EMAIL_REGEX = /@javeriana\.edu\.co$/;
 
-export const API_ENDPOINTS = {
-  EVENTS: 'https://jsonplaceholder.typicode.com/posts',
-} as const;
