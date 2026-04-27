@@ -15,7 +15,7 @@ export const Pagination = ({
   itemsPerPage,
   totalItems,
 }: PaginationProps) => {
-  if (totalPages <= 1) return null;
+  if (totalItems === 0) return null;
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -61,7 +61,8 @@ export const Pagination = ({
         <span className="font-semibold text-primary-600 dark:text-primary-400">{totalItems}</span> resultados
       </p>
 
-      <div className="flex items-center gap-2">
+      {totalPages > 1 && (
+        <div className="flex items-center gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -108,6 +109,7 @@ export const Pagination = ({
           <ChevronRight className="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
         </button>
       </div>
+      )}
     </nav>
   );
 };

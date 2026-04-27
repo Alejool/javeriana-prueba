@@ -13,6 +13,7 @@ interface EventFiltersProps {
   onSearchChange: (value: string) => void;
   selectedCategory: EventCategory | "all";
   onCategoryChange: (category: EventCategory | "all") => void;
+  categoryCounts: Record<EventCategory | "all", number>;
 }
 
 const getCategoryIcon = (category: EventCategory | "all") => {
@@ -36,6 +37,7 @@ export const EventFilters = ({
   onSearchChange,
   selectedCategory,
   onCategoryChange,
+  categoryCounts,
 }: EventFiltersProps) => {
   return (
     <section 
@@ -78,7 +80,7 @@ export const EventFilters = ({
             `}
           >
             {getCategoryIcon("all")}
-            <span className="font-body text-sm">Todos</span>
+            <span className="font-body text-sm">Todos ({categoryCounts["all"]})</span>
           </button>
 
           {EVENT_CATEGORIES.map((category) => (
@@ -95,7 +97,7 @@ export const EventFilters = ({
               `}
             >
               {getCategoryIcon(category)}
-              <span className="font-body text-sm">{category}</span>
+              <span className="font-body text-sm">{category} ({categoryCounts[category]})</span>
             </button>
           ))}
         </div>

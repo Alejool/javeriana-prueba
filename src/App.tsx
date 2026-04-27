@@ -23,7 +23,7 @@ function App() {
     useEventsStore();
 
   // Filter logic is fully encapsulated in this hook (point 1 & 3)
-  const { searchTerm, selectedCategory, filteredEvents, setSearchTerm, setSelectedCategory } =
+  const { searchTerm, selectedCategory, filteredEvents, categoryCounts, setSearchTerm, setSelectedCategory } =
     useEventFilters();
 
   // Local UI state
@@ -39,7 +39,7 @@ function App() {
     loadEvents();
   }, [loadEvents]);
 
-  // Stable handler references — avoid re-rendering child components (point 2)
+  // Stable handler references
   const handleRegister = useCallback((event: Event) => {
     setSelectedEvent(event);
   }, []);
@@ -107,6 +107,7 @@ function App() {
           onSearchChange={setSearchTerm}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          categoryCounts={categoryCounts}
         />
 
         <EventsList
@@ -134,7 +135,7 @@ function App() {
 
       <LeadsHistory isOpen={isHistoryOpen} onClose={handleCloseHistory} />
 
-      {/* Toast notifications */}
+      {/* Toast  */}
       <AnimatePresence>
         {toast && (
           <Toast
