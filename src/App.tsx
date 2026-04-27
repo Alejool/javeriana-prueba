@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { EventFilters } from "@/features/events/components/EventFilters";
 import { EventsList } from "@/features/events/components/EventsList";
-import type { Event, EventCategory } from "@/features/events/types";
+import { useEventFilters } from "@/features/events/hooks/useEventFilters";
+import type { Event } from "@/features/events/types";
 import { LeadForm } from "@/features/leads/components/LeadForm";
 import { LeadsHistory } from "@/features/leads/components/LeadsHistory";
 import type { LeadFormData } from "@/features/leads/types";
@@ -16,20 +17,16 @@ import { AnimatePresence } from "framer-motion";
 import { Users } from "lucide-react";
 
 function App() {
-  // stores
+  // Stores
   const { addLead, leads } = useLeadsStore();
-  const {
-    events,
-    loading,
-    error,
-    loadEvents,
-    filterEvents,
-    currentPage,
-    itemsPerPage,
-    setCurrentPage,
-  } = useEventsStore();
+  const { loading, error, loadEvents, currentPage, itemsPerPage, setCurrentPage } =
+    useEventsStore();
 
-  // Local state
+  // Filter logic is fully encapsulated in this hook (point 1 & 3)
+  const { searchTerm, selectedCategory, filteredEvents, setSearchTerm, setSelectedCategory } =
+    useEventFilters();
+
+  // Local UI state
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [toast, setToast] = useState<{
@@ -37,63 +34,46 @@ function App() {
     type: "success" | "error" | "warning" | "info";
   } | null>(null);
 
-  // localStorage filters
-  const [searchTerm, setSearchTerm] = useState(() => {
-    const saved = localStorage.getItem("eventSearchTerm");
-    return saved || "";
-  });
-
-  const [selectedCategory, setSelectedCategory] = useState<
-    EventCategory | "all"
-  >(() => {
-    const saved = localStorage.getItem("eventSelectedCategory");
-    return (saved as EventCategory | "all") || "all";
-  });
-
-  // filters persistence
-  useEffect(() => {
-    localStorage.setItem("eventSearchTerm", searchTerm);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    localStorage.setItem("eventSelectedCategory", selectedCategory);
-  }, [selectedCategory]);
-
-  // Load events
+  // Load events on mount
   useEffect(() => {
     loadEvents();
   }, [loadEvents]);
 
-  // Filter events useMemo
-  const filteredEvents = useMemo(() => {
-    if (!events) return [];
-    return filterEvents(searchTerm, selectedCategory);
-  }, [events, searchTerm, selectedCategory, filterEvents]);
-
-  // Reset page 1
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory, setCurrentPage]);
-
-  const handleRegister = (event: Event) => {
+  // Stable handler references — avoid re-rendering child components (point 2)
+  const handleRegister = useCallback((event: Event) => {
     setSelectedEvent(event);
-  };
+  }, []);
 
-  const handleSubmitLead = (data: LeadFormData) => {
-    try {
-      const newLead = addLead(data);
-      setToast({
-        message: `¡Lead ${newLead.fullName} registrado exitosamente!`,
-        type: "success",
-      });
-    } catch (error) {
-      console.error(error);
-      setToast({
-        message: "Error al registrar el lead",
-        type: "error",
-      });
-    }
-  };
+  const handleCloseForm = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
+
+  const handleCloseHistory = useCallback(() => {
+    setIsHistoryOpen(false);
+  }, []);
+
+  const handleCloseToast = useCallback(() => {
+    setToast(null);
+  }, []);
+
+  const handleSubmitLead = useCallback(
+    (data: LeadFormData) => {
+      try {
+        const newLead = addLead(data);
+        setToast({
+          message: `¡Lead ${newLead.fullName} registrado exitosamente!`,
+          type: "success",
+        });
+      } catch (err) {
+        console.error(err);
+        setToast({
+          message: "Error al registrar el lead",
+          type: "error",
+        });
+      }
+    },
+    [addLead]
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-neutral-950 transition-colors duration-200">
@@ -147,22 +127,20 @@ function App() {
           <LeadForm
             event={selectedEvent}
             onSubmit={handleSubmitLead}
-            onClose={() => setSelectedEvent(null)}
+            onClose={handleCloseForm}
           />
         )}
       </AnimatePresence>
-      <LeadsHistory
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-      />
 
-      {/* Notificación */}
+      <LeadsHistory isOpen={isHistoryOpen} onClose={handleCloseHistory} />
+
+      {/* Toast notifications */}
       <AnimatePresence>
         {toast && (
           <Toast
             message={toast.message}
             type={toast.type}
-            onClose={() => setToast(null)}
+            onClose={handleCloseToast}
           />
         )}
       </AnimatePresence>
