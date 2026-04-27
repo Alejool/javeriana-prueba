@@ -1,27 +1,5 @@
-import { useEffect, useState } from 'react';
-
-export function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => {
-    // ¿Está en locastorage?
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) {
-      return JSON.parse(saved);
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    
-    if (isDark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', JSON.stringify(isDark));
-  }, [isDark]);
-
-  const toggleDarkMode = () => setIsDark(!isDark);
-
-  return { isDark, setIsDark, toggleDarkMode };
-}
+/**
+ * @deprecated Use `useTheme` from `@/shared/hooks/useTheme` directly.
+ * This file is kept only for backward compatibility.
+ */
+export { useTheme as useDarkMode } from '@/shared/hooks/useTheme';
