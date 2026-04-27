@@ -1,4 +1,4 @@
-import type { Event } from "@/features/events/types";
+import type { Event, EventCategory } from "@/features/events/types";
 import { Button } from "@/shared/components/Button";
 import { Card } from "@/shared/components/Card";
 import { formatDateLong } from "@/shared/utils/dateFormatter";
@@ -10,34 +10,39 @@ interface EventCardProps {
   onRegister: (event: Event) => void;
 }
 
-export const EventCard = ({ event, onRegister }: EventCardProps) => {
-  const categoryConfig = {
-    Pregrado: {
-      badge:
-        "bg-primary-50 text-primary-800 border border-primary-300 dark:bg-primary-900/80 dark:text-primary-100 dark:border-primary-700",
-      borderColor: "border-primary",
-    },
-    Posgrado: {
-      badge:
-        "bg-secondary-50 text-secondary-900 border border-secondary-300 dark:bg-secondary-900/80 dark:text-secondary-100 dark:border-secondary-700",
-      borderColor: "border-secondary-500",
-    },
-    "Educación Continua": {
-      badge:
-        "bg-secondary-50 text-secondary-900 border border-secondary-300 dark:bg-secondary-900/80 dark:text-secondary-100 dark:border-secondary-600",
-      borderColor: "border-secondary-500",
-    },
-  };
+// Static config — defined at module scope to avoid object recreation on every render
+const categoryConfig: Record<
+  EventCategory,
+  { badge: string; borderColor: string }
+> = {
+  Pregrado: {
+    badge:
+      "bg-primary-50 text-primary-800 border border-primary-300 dark:bg-primary-900/80 dark:text-primary-100 dark:border-primary-700",
+    borderColor: "border-primary",
+  },
+  Posgrado: {
+    badge:
+      "bg-secondary-50 text-secondary-900 border border-secondary-300 dark:bg-secondary-900/80 dark:text-secondary-100 dark:border-secondary-700",
+    borderColor: "border-secondary-500",
+  },
+  "Educación Continua": {
+    badge:
+      "bg-secondary-50 text-secondary-900 border border-secondary-300 dark:bg-secondary-900/80 dark:text-secondary-100 dark:border-secondary-600",
+    borderColor: "border-secondary-500",
+  },
+};
 
+export const EventCard = ({ event, onRegister }: EventCardProps) => {
   const config = categoryConfig[event.category];
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
       className="h-full"
+      aria-label={`Evento: ${event.title}`}
     >
       <Card
         hover
@@ -98,6 +103,6 @@ export const EventCard = ({ event, onRegister }: EventCardProps) => {
           </div>
         </div>
       </Card>
-    </motion.div>
+    </motion.article>
   );
 };
