@@ -61,6 +61,7 @@ export const LeadForm = ({ event, onSubmit, onClose }: LeadFormProps) => {
         <form
           onSubmit={handleSubmit(onFormSubmit)}
           className="flex flex-col h-full"
+          noValidate
         >
           <div className="bg-primary dark:bg-primary text-white px-6 py-5 flex justify-between items-center rounded-t-lg border-b-4 border-secondary-500 flex-shrink-0">
             <div>
