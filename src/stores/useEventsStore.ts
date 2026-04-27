@@ -10,7 +10,7 @@ interface EventsStoreState extends EventsState {
   setItemsPerPage: (items: number) => void;
 }
 
-export const useEventsStore = create<EventsStoreState>((set, get) => ({
+export const useEventsStore = create<EventsStoreState>((set) => ({
   events: [],
   loading: false,
   error: null,
