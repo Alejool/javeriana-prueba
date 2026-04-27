@@ -36,4 +36,4 @@ pruebas/
 
 
 .env
-.env.example
+!.env.example
