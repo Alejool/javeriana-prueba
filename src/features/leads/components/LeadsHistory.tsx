@@ -99,10 +99,10 @@ export const LeadsHistory = ({ isOpen, onClose }: LeadsHistoryProps) => {
                               <span className="truncate">{lead.phone}</span>
                             </div>
                           )}
-                          <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400 sm:col-span-2">
-                            <Calendar className="w-3.5 h-3.5 text-secondary-500 shrink-0" />
+                          <div className="flex items-start gap-2 text-neutral-600 dark:text-neutral-400 sm:col-span-2 mt-1">
+                            <Calendar className="w-3.5 h-3.5 text-secondary-500 shrink-0 mt-0.5" />
                             <span className="font-medium shrink-0">Evento: </span>
-                            <span className="text-neutral-800 dark:text-neutral-200 truncate">
+                            <span className="text-neutral-800 dark:text-neutral-200 break-words leading-tight">
                               {lead.eventTitle}
                             </span>
                           </div>
